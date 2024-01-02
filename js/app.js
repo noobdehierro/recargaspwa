@@ -1,66 +1,177 @@
 // app.js
-if ("serviceWorker" in navigator) {
-  navigator.serviceWorker
-    .register("sw.js")
-    .then((registration) => {
-      console.log("Service Worker registrado con éxito:", registration);
-    })
-    .catch((error) => {
-      console.error("Error al registrar el Service Worker:", error);
-    });
-}
-$("#msisdn").mask("0000000000");
-
-function realizarConsulta() {
-  const msisdn = document.getElementById("msisdn").value;
-
-  // Realizar la consulta AJAX utilizando jQuery
-  $.ajax({
-    showLoader: true,
-    url: "http://apirecharge.test/api/getOffers", // Reemplaza esto con tu URL de consulta
-    method: "GET",
-    data: { msisdn: msisdn },
-    success: function (data) {
-      localStorage.setItem("msisdn", msisdn);
-
-      console.log(data);
-      mostrarResultados(data);
-    },
-    error: function (error) {
-      console.log("Error en la consulta AJAX:", error);
-      // console.error("Error en la consulta AJAX:", error);
-      Swal.fire({
-        icon: "error",
-        title: "Oops...",
-        text: "El número telefónico no es válido.",
+$(document).ready(function () {
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker
+      .register("sw.js")
+      .then((registration) => {
+        console.log("Service Worker registrado con éxito:", registration);
+      })
+      .catch((error) => {
+        console.error("Error al registrar el Service Worker:", error);
       });
-    },
+  }
+
+  const cachedMsisdn = localStorage.getItem("msisdn");
+
+  if (cachedMsisdn) {
+    // Si hay un número en el caché, realiza la consulta directamente
+    $("#msisdn").val(cachedMsisdn); // Llena el campo con el número del caché
+    realizarConsulta(); // Realiza la consulta
+  }
+
+  $("#msisdn").mask("0000000000");
+
+  var offerTemplate =
+    '<div class="plan offeringTemplate :superoferta">' +
+    '<div class="offer-name plan_title">:offername</div>' +
+    '<div class="offer-price letrasplan"><small>$</small>:offerprice</div>' +
+    '<div class="offer-short" style="display: none;">:offershort</div>' +
+    '<div class="offer-description letrasplan">:offerdesc</div>' +
+    '<button class="select_plan buttonplan next" data-id=":offerid">Continuar</button>' +
+    "</div>";
+
+  function realizarConsulta() {
+    const msisdn = $("#msisdn").val();
+
+    if (msisdn.length < 10) {
+      mostrarError("El número telefónico no es válido.");
+      return;
+    }
+
+    $.ajax({
+      url: "http://apirecharge.test/api/getOffers",
+      method: "GET",
+      data: { msisdn: msisdn },
+      beforeSend: function () {
+        $("#overlay").fadeIn(300);
+      },
+      success: function (data) {
+        console.log(data);
+
+        if (data.status === "fail") {
+          mostrarError("El número telefónico no es válido.");
+          return;
+        }
+
+        $(".msisdn").text(msisdn);
+        localStorage.setItem("msisdn", msisdn);
+
+        mostrarResultados(data);
+      },
+      error: function (error) {
+        console.log("Error en la consulta AJAX:", error);
+        mostrarError("Error al realizar la consulta.");
+      },
+      complete: function () {
+        $("#overlay").fadeOut(300);
+      },
+    });
+  }
+
+  function mostrarResultados(data) {
+    $("#pantalla1").addClass("hidden");
+    $("#pantalla2").removeClass("hidden");
+
+    $("#email").val(data.email);
+
+    $("#offerings").html("");
+
+    $.each(data.offerings, function (index, item) {
+      if (item.description === "") {
+        item.description = "Descripción no disponible.";
+      }
+
+      if (item.name !== null) {
+        var offer = offerTemplate
+          .replace(":superoferta", item.superOferta)
+          .replace(":offerprice", item.specialPrice)
+          .replace(":offername", item.name)
+          .replace(":offerdesc", item.description)
+          .replace(":offerid", item.productId);
+
+        $("#offerings").append(offer);
+      }
+    });
+
+    $(".select_plan").on("click", function () {
+      var productCard = $(this).parent();
+      var total = productCard.find(".offer-price").text();
+
+      var price = Number(
+        total.replace("MXN", "").replace("$", "").replace(".00", "")
+      ).toString();
+
+      var dataToSend = {
+        msisdn: $("#msisdn").val(),
+        offering_id: $(this).attr("data-id"),
+        description: productCard.find(".offer-description").html(),
+        offering_price: price,
+        offering_name: productCard.find(".offer-name").text(),
+        email: $("#email").val(),
+      };
+
+      $.ajax({
+        url: "http://apirecharge.test/api/saveOrder",
+        method: "POST",
+        data: dataToSend,
+        success: function (data) {
+          console.log(data);
+
+          $("#pantalla1").addClass("hidden");
+          $("#pantalla2").addClass("hidden");
+          $("#pantalla3").removeClass("hidden");
+
+          var imprime = $("#store-imprime");
+          imprime.find(".nombre-plan").text(data.data[0].offering_name);
+          imprime.find(".monto").text("$" + data.data[0].amount + " MXN");
+          imprime.find(".referencia-igou").text(data.data[3]);
+          imprime.find(".barcode-img").attr("src", data.data[1]);
+          imprime.find(".barcode-ref").text(data.data[2]);
+
+          if (data.data[4] == "OXXO") {
+            imprime.find(".store-pay").attr("src", "images/oxxo_pay.png");
+          } else {
+            imprime.find(".store-pay").attr("src", "images/stores_pay.png");
+          }
+        },
+        error: function (error) {
+          console.log("Error en la consulta AJAX:", error);
+          mostrarError("Error al realizar la consulta.");
+        },
+      });
+    });
+  }
+
+  function mostrarError(message) {
+    Swal.fire({
+      icon: "error",
+      title: "Oops...",
+      text: message,
+    });
+  }
+
+  $("#store_print").on("click", function () {
+    $.print("#store-imprime");
   });
-}
 
-function mostrarResultados(data) {
-  // Ocultar la pantalla 1 y mostrar la pantalla 2
-  document.getElementById("pantalla1").classList.add("hidden");
-  document.getElementById("pantalla2").classList.remove("hidden");
+  function regresarPantalla1() {
+    $("#pantalla1").removeClass("hidden");
+    $("#pantalla2").addClass("hidden");
+  }
 
-  // Mostrar los resultados en la pantalla 2
-  const resultadosDiv = document.getElementById("resultados");
-  resultadosDiv.innerHTML = `<p>Resultados:</p><pre>${JSON.stringify(
-    data,
-    null,
-    2
-  )}</pre>`;
-}
+  $(document).ajaxSend(function () {
+    $("#overlay").fadeIn(300);
+  });
 
-function regresarPantalla1() {
-  // Ocultar la pantalla 2 y mostrar la pantalla 1
-  document.getElementById("pantalla1").classList.remove("hidden");
-  document.getElementById("pantalla2").classList.add("hidden");
-}
-$(document).ajaxSend(function () {
-  $("#overlay").fadeIn(300);
-});
+  $(document).ajaxComplete(function () {
+    $("#overlay").fadeOut(300);
+  });
 
-$(document).ajaxComplete(function () {
-  $("#overlay").fadeOut(300);
+  $("#realizarConsultaBtn").on("click", function () {
+    realizarConsulta();
+  });
+
+  $("#regresarBtn").on("click", function () {
+    regresarPantalla1();
+  });
 });

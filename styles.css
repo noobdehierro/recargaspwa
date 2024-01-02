@@ -1,37 +1,226 @@
+body {
+  margin: 0;
+  padding: 0;
+  background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 1)), url("./images/favicon.ico");
+  background-repeat: repeat;
+  background-size: auto;
+}
+
 #overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 100;
-    width: 100%;
-    max-width: 100%;
-    height: 100%;
-    display: none;
-    background: rgba(0, 0, 0, 0.6);
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 100;
+  width: 100%;
+  max-width: 100%;
+  height: 100%;
+  display: none;
+  background: rgba(0, 0, 0, 0.6);
 }
 
 .cv-spinner {
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .spinner {
-    width: 40px;
-    height: 40px;
-    border: 4px #ddd solid;
-    border-top: 4px #9027E2 solid;
-    border-radius: 50%;
-    animation: sp-anime 0.8s infinite linear;
+  width: 40px;
+  height: 40px;
+  border: 4px #ddd solid;
+  border-top: 4px #9027e2 solid;
+  border-radius: 50%;
+  animation: sp-anime 0.8s infinite linear;
 }
 
 @keyframes sp-anime {
-    0% {
-        transform: rotate(0deg);
-    }
+  0% {
+    transform: rotate(0deg);
+  }
 
-    100% {
-        transform: rotate(360deg);
-    }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.plan.offeringTemplate {
+  margin: 0 20px 55px 25px;
+  min-height: 335px;
+  float: left;
+  padding: 25px 15px;
+  font-size: 14px;
+  position: relative;
+  width: 300px;
+}
+
+.plan.offeringTemplate.super-oferta {
+  box-shadow: 0px 0px 15px 5px rgba(179, 138, 255, 0.46);
+}
+
+.plan {
+  background-color: #ffffff;
+  border-radius: 20px;
+  transition: background 0.3s, border 0.3s, border-radius 0.3s, box-shadow 0.3s;
+  box-shadow: 0px 0px 36px rgba(160, 160, 210, 0.5);
+  text-align: center;
+  color: #333740;
+}
+
+.plan_title {
+  position: relative;
+  padding: 35px 10px;
+  margin: -25px -15px 0 -15px;
+  color: #ffffff;
+  background-image: linear-gradient(90deg, #3f00ba 0%, #3f00bac2 100%);
+  border-radius: 20px 20px 20px 20px;
+  font-size: 40px;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.buttonplan {
+  border: none;
+  font-size: 19px;
+  font-weight: 700;
+  padding: 10px 55px !important;
+  box-shadow: none;
+  background: #3f00ba;
+  border-radius: 10px;
+  color: #ffffff;
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+.buttonplan:hover {
+  background: #67f7af;
+  color: #3f00ba;
+}
+
+.buttonplan:after {
+  content: ">";
+  display: inline-block;
+  margin-left: 10px;
+}
+.letrasplan {
+  color: #000000;
+}
+
+.letrasplan ul {
+  text-align: left;
+  min-height: 200px;
+  padding: 0 10px;
+}
+
+.offer-description li {
+  margin: 0;
+  list-style: none;
+  display: flex;
+  align-items: center;
+}
+
+span.igou-list-text {
+  font-size: 16px;
+  font-weight: 400;
+}
+
+span.igou-list-icon {
+  color: #000000;
+  font-size: 5px;
+  margin-right: 10px;
+  vertical-align: middle;
+}
+
+.offer-price {
+  color: #000;
+  margin: 35px auto 35px;
+  font-size: 40px;
+  font-weight: 700;
+}
+
+.store-cash {
+  text-align: center;
+}
+
+.store-imprime {
+  background: #ffffff;
+  border: 1px solid #666666;
+  border-radius: 8px;
+  box-shadow: 0px 0px 36px #d2d2d2;
+  padding: 25px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.no-imprime {
+  background: #000000;
+  display: block;
+  color: #ffffff;
+  font-size: 10px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: -25px;
+  margin-bottom: 25px;
+  padding: 3px 10px;
+  width: fit-content;
+}
+
+.store-cash span.nombre-plan {
+  font-size: 24px;
+  margin-bottom: 10px;
+  display: block;
+}
+
+.store-cash span.monto {
+  font-size: 24px;
+  display: block;
+  color: #000000;
+  font-weight: 700;
+}
+
+.store-cash span.store-comision {
+  display: inline-block;
+  font-size: 12px;
+  margin-bottom: 15px;
+}
+
+.store-cash .barcode {
+  display: block;
+  clear: both;
+  width: 100%;
+  margin: 25px auto;
+}
+
+.store-cash .barcode p.barcode-label {
+  margin: 25px 0 0;
+}
+
+span.barcode-ref {
+  background: #E9E8EC;
+  border: 1px solid #bbbbbb;
+  border-radius: 5px;
+  color: #000000;
+  font-weight: 700;
+  letter-spacing: 3px;
+  display: block;
+  padding: 10px;
+  width: fit-content;
+  margin: 0 auto;
+}
+span.barcode-ref {
+  letter-spacing: 3px;
+}
+
+.store-instrucciones {
+  text-align: left;
+  background: #E9E8EC;
+  padding: 25px;
+}
+
+.store-instrucciones ul {
+  padding: 0 0 0 10px;
+  list-style: outside;
+}
+.barcode-img {
+  margin: 0 auto;
 }

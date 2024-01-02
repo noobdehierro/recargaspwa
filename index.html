@@ -1,83 +1,126 @@
 <!DOCTYPE html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-    <link rel="stylesheet" href="styles.css" />
-    <link rel="icon" href="/images/favicon.ico" type="images/x-icon" />
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <!-- Reemplaza la siguiente línea con la correcta URL de Tailwind CSS o incluye localmente -->
+  <!-- <link rel="stylesheet" href="https://unpkg.com/tailwindcss@2.2.19/dist/tailwind.min.css" /> -->
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" href="/images/favicon.ico" type="image/x-icon" />
 
-    <title>PWA con Caché</title>
-  </head>
-  <body class="bg-gray-100 font-sans">
-    <div class="flex items-center justify-between container mx-auto p-4">
-      <img
-        src="/images/logo.png"
-        alt="Logo de la empresa"
-        class="h-10 w-auto"
-      />
-      <!-- Puedes ajustar la clase "h-10" según el tamaño deseado del logo -->
+  <title>PWA con Caché</title>
+</head>
+
+<body class="bg-gray-100 font-sans">
+  <div class="flex items-center justify-between container mx-auto p-4">
+    <img src="/images/logo.png" alt="Logo de la empresa" class="h-10 w-auto" />
+  </div>
+  <div id="pantalla1">
+    <!-- ... (contenido de pantalla1) ... -->
+    <div class="container mx-auto p-4">
+      <div class="bg-blue-200 rounded-lg shadow p-6 mb-6 text-center">
+        <h1 class="text-2xl font-bold mb-4">¡Bienvenido!</h1>
+        <p class="text-gray-700">Ingresa el número telefónico a recargar.</p>
+      </div>
+      <div class="p-6 text-center">
+        <label for="msisdn" class="text-gray-700 font-bold mb-2">Ingresa tu teléfono:</label>
+        <input type="text" id="msisdn" placeholder="Tu teléfono"
+          class="w-full p-2 mb-4 border rounded focus:outline-none focus:ring-2 focus:ring-green-500 text-center" />
+        <button id="realizarConsultaBtn" class="bg-green-500 text-white px-4 py-2 rounded w-full">
+          Realizar Consulta
+        </button>
+      </div>
     </div>
-    <div id="pantalla1">
-      <div class="container mx-auto p-4">
-        <!-- Cabecera con logo -->
+  </div>
+  <div id="pantalla2" class="hidden">
+    <!-- ... (contenido de pantalla2) ... -->
+    <div class="container mx-auto p-4">
+      <div class="bg-blue-200 rounded-lg shadow p-6 mb-6">
+        <h1 class="text-lg text-center mb-4">
+          Resultados para el número <span class="msisdn font-bold"></span>
+        </h1>
+        <button id="regresarBtn" class="bg-blue-500 text-white px-4 py-2 rounded w-full">
+          Ingresar nuevo número telefónico
+        </button>
+        <h2 class="text-lg text-center font-bold mb-4">
+          Elige tu plan móvil
+        </h2>
+        <h2 class="text-base text-center mb-4">
+          ¡Tenemos las siguientes ofertas para ti!
+        </h2>
 
-        <!-- Contenido principal -->
-        <div class="bg-blue-200 rounded-lg shadow p-6 mb-6 text-center">
-          <h1 class="text-2xl font-bold mb-4">¡Bienvenido!</h1>
-          <p class="text-gray-700">Ingresa el número telefónico a recargar.</p>
-        </div>
+        <input type="email" id="email" class="hidden">
+      </div>
 
-        <!-- Sección adicional (puedes agregar más según sea necesario) -->
-        <!-- bg-gray-100 rounded-lg shadow -->
-        <div class="p-6 text-center">
-          <label for="msisdn" class="text-gray-700 font-bold mb-2"
-            >Ingresa tu teléfono:</label
-          >
-          <input
-            type="text"
-            id="msisdn"
-            placeholder="Tu teléfono"
-            class="w-full p-2 mb-4 border rounded focus:outline-none focus:ring-2 focus:ring-green-500 text-center"
-          />
-          <button
-            onclick="realizarConsulta()"
-            class="bg-green-500 text-white px-4 py-2 rounded w-full"
-          >
-            Realizar Consulta
-          </button>
+      <div class="offerings" id="offerings"></div>
+    </div>
+  </div>
+  </div>
+  <div id="pantalla3" class="store-cash hidden">
+    <!-- ... (contenido de pantalla3) ... -->
+
+    <div class="container mx-auto p-4">
+      <h2>¡Gracias por tu preferencia!</h2>
+      <p>Realiza el pago en la tienda de conveniencia más cercana con tu número de referencia.</p>
+      <div class="store-imprime" id="store-imprime">
+        <div class="no-imprime">FICHA DIGITAL, NO ES NECESARIO IMPRIMIR.</div>
+        <div class="igou-row">
+          <div class="igou-col-50">
+
+            <img class="store-pay" alt="StoresPay">
+
+          </div>
+          <div class="igou-col-50">
+            <span class="nombre-plan"></span><br />
+            <span class="monto"></span><br />
+            <span class="store-comision">*La tienda cobrará una comisión adicional al
+              momento
+              de
+              realizar el pago.</span>
+            <br /><br />
+          </div>
         </div>
+        Id transacción: <span class="referencia-igou"></span><br>
+        <div class="barcode">
+          <img class="barcode-img" src="" />
+          <p class="barcode-label">REFERENCIA</p>
+          <span class="barcode-ref"></span>
+        </div>
+        <div class="store-instrucciones">
+          <h5>INSTRUCCIONES:</h5>
+          <ul>
+            <li>Acude a la tienda de conveniencia más cercana.</li>
+            <li>Indica en caja que quieres realizar un pago con tu ficha dígital.</li>
+            <li>Presenta el código de barras o dicta al cajero el número de referencia.</li>
+            <li>Realiza tu pago en efectivo.</li>
+            <li>Solicita y conserva el comprobante impreso.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="button-underline">
+        <button class="bg-green-500 text-white px-4 py-2 rounded w-full" id="store_print"
+          type="button">Imprimir</button>
       </div>
     </div>
 
-    <div id="pantalla2" class="hidden">
-      <div class="container mx-auto p-4">
-        <!-- Contenido principal -->
-        <div class="bg-blue-200 rounded-lg shadow p-6 mb-6">
-          <button
-            onclick="regresarPantalla1()"
-            class="bg-blue-500 text-white px-4 py-2 rounded w-full"
-          >
-            Ingresar nuevo número telefónico
-          </button>
-
-          <h1 class="text-2xl font-bold mb-4">Resultados</h1>
-          <div id="resultados"></div>
-        </div>
-      </div>
+  </div>
+  <div id="overlay">
+    <div class="cv-spinner">
+      <span class="spinner"></span>
     </div>
+  </div>
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <!-- Asegúrate de tener la ruta correcta para estos archivos de script -->
+  <script src="js/libs/jquery.mask.min.js"></script>
+  <script src="js/libs/jquery.validate.min.js"></script>
+  <script src="js/libs/jquery.print.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="js/app.js"></script>
+</body>
 
-    <div id="overlay">
-      <div class="cv-spinner">
-        <span class="spinner"></span>
-      </div>
-    </div>
-    <script src="js//libs/jquery.com_jquery-3.7.0.min.js"></script>
-    <script src="js/libs/jquery.mask.min.js"></script>
-    <script src="js/libs/jquery.validate.min.js"></script>
-    <script src="js/app.js"></script>
-  </body>
 </html>
