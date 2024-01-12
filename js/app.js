@@ -51,7 +51,7 @@ $(document).ready(function () {
     }
 
     $.ajax({
-      url: "http://apirecharge.test/api/getOffers",
+      url: "https://api-recargas.figou.mx/api/getOffers",
       method: "GET",
       data: { msisdn: msisdn },
       beforeSend: function () {
@@ -123,22 +123,32 @@ $(document).ready(function () {
       };
 
       $.ajax({
-        url: "http://apirecharge.test/api/saveOrder",
+        url: "https://api-recargas.figou.mx/api/saveOrder",
         method: "POST",
         data: dataToSend,
         success: function (data) {
           console.log(data);
+
+          if (data.status !== "success") {
+            // mostrarError("Error al realizar la compra.");
+            Swal.fire({
+              icon: "error",
+              title: "Oops...",
+              text: "Error al realizar la compra.",
+              footer: "Por favor, intenta de nuevo.",
+            })
+          }
 
           $("#pantalla1").addClass("hidden");
           $("#pantalla2").addClass("hidden");
           $("#pantalla3").removeClass("hidden");
 
           var imprime = $("#store-imprime");
-          imprime.find(".nombre-plan").text(data.data[0].offering_name);
-          imprime.find(".monto").text("$" + data.data[0].amount + " MXN");
-          imprime.find(".referencia-igou").text(data.data[3]);
-          imprime.find(".barcode-img").attr("src", data.data[1]);
-          imprime.find(".barcode-ref").text(data.data[2]);
+          imprime.find(".nombre-plan").text(data.data.offering_name);
+          imprime.find(".monto").text("$" + data.data.offering_price + " MXN");
+          imprime.find(".referencia-igou").text(data.data.conekta_order_id);
+          imprime.find(".barcode-img").attr("src", data.data.barcode_url);
+          imprime.find(".barcode-ref").text(data.data.referencia_conekta);
 
           if (data.data[4] == "OXXO") {
             imprime.find(".store-pay").attr("src", "images/oxxo_pay.png");
