@@ -150,11 +150,11 @@ $(document).ready(function () {
           imprime.find(".barcode-img").attr("src", data.data.barcode_url);
           imprime.find(".barcode-ref").text(data.data.referencia_conekta);
 
-          if (data.data[4] == "OXXO") {
+          // if (data.data[4] == "OXXO") {
             imprime.find(".store-pay").attr("src", "images/oxxo_pay.png");
-          } else {
-            imprime.find(".store-pay").attr("src", "images/stores_pay.png");
-          }
+          // } else {
+          //   imprime.find(".store-pay").attr("src", "images/stores_pay.png");
+          // }
         },
         error: function (error) {
           console.log("Error en la consulta AJAX:", error);
