@@ -1,9 +1,9 @@
 // imports
 importScripts("/recarga-facil/js/sw-utils.js");
 
-const STATIC_CACHE = "static-v7";
-const DYNAMIC_CACHE = "dynamic-v7";
-const INMUTABLE_CACHE = "inmutable-v7";
+const STATIC_CACHE = "static-v9";
+const DYNAMIC_CACHE = "dynamic-v9";
+const INMUTABLE_CACHE = "inmutable-v9";
 
 const APP_SHELL = [
   "/recarga-facil/",

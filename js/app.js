@@ -1,32 +1,67 @@
 // app.js
 $(document).ready(function () {
-  // if ("serviceWorker" in navigator) {
-  //   navigator.serviceWorker
-  //     .register("sw.js")
-  //     .then((registration) => {
-  //       console.log("Service Worker registrado con éxito:", registration);
-  //     })
-  //     .catch((error) => {
-  //       console.error("Error al registrar el Service Worker:", error);
-  //     });
-  // }
+  var beforeInstallPrompt = null;
 
-  // if ('serviceWorker' in navigator && window.location.protocol === 'https:') {
-  if ("serviceWorker" in navigator) {
-    navigator.serviceWorker
-      .register("sw.js")
-      .then((registration) => {
-        console.log("Service Worker registrado con éxito:", registration);
-        navigator.serviceWorker.ready.then(function (registration) {
-          registration.showNotification('Instala nuestra aplicación', {
-            body: 'Haz clic para instalar la aplicación',
-          });
-        });
-      })
-      .catch((error) => {
-        console.log("Error al registrar el Service Worker:", error);
-      });
+  if (/(android|iphone|ipad)/i.test(navigator.userAgent)) {
+    // El dispositivo es Android o iPhone/iPad (iOS)
+    if (/android/i.test(navigator.userAgent)) {
+      // El dispositivo es Android
+      console.log("El dispositivo es Android.");
+      $(window).on("beforeinstallprompt", eventHandler);
+    } else if (/iphone|ipad/i.test(navigator.userAgent)) {
+      // El dispositivo es iPhone o iPad (iOS)
+      console.log("El dispositivo es iPhone o iPad (iOS).");
+      $(window).on("beforeinstallprompt", eventHandlerIOS);
+    }
+  } else {
+    // El dispositivo no es Android ni iPhone/iPad (iOS)
+    console.log("El dispositivo no es Android ni iPhone/iPad (iOS).");
   }
+
+  function eventHandler(event) {
+    beforeInstallPrompt = event.originalEvent;
+    $("#installBtn").removeAttr("disabled");
+    $("#installBtn").removeAttr("style");
+  }
+
+  function eventHandlerIOS(event) {
+    beforeInstallPrompt = event.originalEvent;
+
+    $("#installBtnIOS").removeAttr("disabled");
+    $("#installBtnIOS").removeAttr("style");
+  }
+
+  $("#installBtn").on("click", function () {
+    if (beforeInstallPrompt) {
+      beforeInstallPrompt.prompt();
+    }
+  });
+
+
+  function registerServiceWorker() {
+    if ("serviceWorker" in navigator) {
+      var url = window.location.href;
+      var swLocation = "/recarga-facil/sw.js";
+
+      if (url.includes("localhost")) {
+        swLocation = "/recarga-facil/sw.js";
+      }
+
+      navigator.serviceWorker
+        .register(swLocation)
+        .then((reg) => {
+          console.log("Registration successful", reg);
+        })
+        .catch((e) =>
+          console.error("Error during service worker registration:", e)
+        );
+    } else {
+      console.warn("Service Worker is not supported");
+    }
+  }
+
+  registerServiceWorker();
+
 
   const cachedMsisdn = localStorage.getItem("msisdn");
 
