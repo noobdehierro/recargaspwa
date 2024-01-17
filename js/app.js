@@ -17,6 +17,11 @@ $(document).ready(function () {
       .register("sw.js")
       .then((registration) => {
         console.log("Service Worker registrado con éxito:", registration);
+        navigator.serviceWorker.ready.then(function (registration) {
+          registration.showNotification('Instala nuestra aplicación', {
+            body: 'Haz clic para instalar la aplicación',
+          });
+        });
       })
       .catch((error) => {
         console.log("Error al registrar el Service Worker:", error);
@@ -151,7 +156,7 @@ $(document).ready(function () {
           imprime.find(".barcode-ref").text(data.data.referencia_conekta);
 
           // if (data.data[4] == "OXXO") {
-            imprime.find(".store-pay").attr("src", "images/oxxo_pay.png");
+          imprime.find(".store-pay").attr("src", "images/oxxo_pay.png");
           // } else {
           //   imprime.find(".store-pay").attr("src", "images/stores_pay.png");
           // }
