@@ -1,27 +1,27 @@
 // imports
-importScripts("/recarga-facil/js/sw-utils.js");
+importScripts("js/sw-utils.js");
 
-const STATIC_CACHE = "static-v4";
-const DYNAMIC_CACHE = "dynamic-v4";
-const INMUTABLE_CACHE = "inmutable-v4";
+const STATIC_CACHE = "static-v5";
+const DYNAMIC_CACHE = "dynamic-v5";
+const INMUTABLE_CACHE = "inmutable-v5";
 
 const APP_SHELL = [
-  "recarga-facil/",
-  "recarga-facil/index.html",
-  "recarga-facil/styles.css",
-  "recarga-facil/js/app.js",
-  "recarga-facil/images/stores_pay.png",
-  "recarga-facil/images/oxxo_pay.png",
-  "recarga-facil/images/logo.png",
-  "recarga-facil/images/favicon.ico",
-  "recarga-facil/js/sw-utils.js",
+  "/",
+  "index.html",
+  "styles.css",
+  "js/app.js",
+  "images/stores_pay.png",
+  "images/oxxo_pay.png",
+  "images/logo.png",
+  "images/favicon.ico",
+  "js/sw-utils.js",
 ];
 
 const APP_SHELL_INMUTABLE = [
-  "recarga-facil/js/libs/jquery.validate.min.js",
-  "recarga-facil/js/libs/jquery.print.min.js",
-  "recarga-facil/js/libs/jquery.mask.min.js",
-  "recarga-facil/js/libs/jquery.com_jquery-3.7.0.min.js",
+  "js/libs/jquery.validate.min.js",
+  "js/libs/jquery.print.min.js",
+  "js/libs/jquery.mask.min.js",
+  "js/libs/jquery.com_jquery-3.7.0.min.js",
 ];
 
 self.addEventListener("install", (e) => {
